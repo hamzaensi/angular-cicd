@@ -5,7 +5,7 @@ on:
     branches: [ "main" ]
 
 permissions:
-  contents: write  # needed to push to gh-pages
+  contents: write
 
 jobs:
   build:
@@ -26,10 +26,9 @@ jobs:
       - name: Build Angular
         run: npm run build -- --configuration production --base-href="/angular-cicd/"
 
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v3
+      - name: Upload static files as artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          name: dist
           path: dist/angular-cicd
 
   deploy:
@@ -37,14 +36,5 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Download build artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: dist
-          path: dist/angular-cicd
-
       - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          branch: gh-pages
-          folder: dist/angular-cicd
+        uses: actions/deploy-pages@v4
