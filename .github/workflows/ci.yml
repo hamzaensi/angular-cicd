@@ -1,24 +1,51 @@
-deploy:
-  needs: build
-  runs-on: ubuntu-latest
+name: Angular CI/CD
 
-  steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: 18
+jobs:
+  build:
+    runs-on: ubuntu-latest
 
-    - name: Install dependencies
-      run: npm install
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Build Angular
-      run: npm run build -- --configuration production --base-href="/angular-cicd/"
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
 
-    - name: Deploy to GitHub Pages
-      uses: JamesIves/github-pages-deploy-action@v4
-      with:
-        branch: gh-pages
-        folder: dist/angular-cicd
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Angular
+        run: npm run build -- --configuration production --base-href="/angular-cicd/"
+
+  deploy:
+    needs: build   # means "run after build"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Angular
+        run: npm run build -- --configuration production --base-href="/angular-cicd/"
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: dist/angular-cicd   # must match your angular.json outputPath
