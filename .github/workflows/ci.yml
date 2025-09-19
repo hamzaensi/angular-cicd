@@ -1,51 +1,24 @@
-name: Angular CI/CD
+deploy:
+  needs: build
+  runs-on: ubuntu-latest
 
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    - name: Install dependencies
+      run: npm install
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
+    - name: Build Angular
+      run: npm run build -- --configuration production --base-href="/angular-cicd/"
 
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build Angular
-        run: npm run build -- --configuration production --base-href="/angular-cicd/"
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build Angular
-        run: npm run build -- --configuration production --base-href="/angular-cicd/"
-
-      - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          branch: gh-pages   # The branch GitHub Pages will use
-          folder: dist/angular-cicd   # Replace with your dist folder name
+    - name: Deploy to GitHub Pages
+      uses: JamesIves/github-pages-deploy-action@v4
+      with:
+        branch: gh-pages
+        folder: dist/angular-cicd
