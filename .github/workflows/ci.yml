@@ -14,22 +14,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: 18
 
-      - name: Install dependencies
-        run: npm install
+      - run: npm install
 
-      - name: Build Angular
-        run: npm run build -- --configuration production --base-href="/angular-cicd/"
+      - run: npm run build -- --configuration production --base-href="/angular-cicd/"
 
-      - name: Upload static files as artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Upload built site
+        uses: actions/upload-pages-artifact@v1
         with:
           path: dist/angular-cicd
 
@@ -37,8 +33,8 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     environment:
-      name: github-pages   # ✅ Required
+      name: github-pages
 
     steps:
       - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v1
