@@ -30,10 +30,9 @@ jobs:
         run: npm run build -- --configuration production
 
       - name: Upload dist folder
-        uses: actions/upload-artifact@v4   # ✅ use v4 instead of v3
+        uses: actions/upload-pages-artifact@v3   # ✅ Special action for Pages
         with:
-          name: angular-dist
-          path: dist/angular-cicd
+          path: dist/angular-cicd   # ✅ must point to your Angular build output
 
   deploy:
     environment:
@@ -43,15 +42,6 @@ jobs:
     needs: build
 
     steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v4   # ✅ use v4
-        with:
-          name: angular-dist
-          path: ./dist
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-
-      - name: Upload to GitHub Pages
+      - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
