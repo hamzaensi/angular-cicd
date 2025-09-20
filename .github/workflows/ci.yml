@@ -30,9 +30,9 @@ jobs:
         run: npm run build -- --configuration production
 
       - name: Upload dist folder
-        uses: actions/upload-pages-artifact@v3   # ✅ Special action for Pages
+        uses: actions/upload-pages-artifact@v3
         with:
-          path: dist/angular-cicd   # ✅ must point to your Angular build output
+          path: dist/angular-cicd/browser # ✅ must point to your Angular build output
 
   deploy:
     environment:
